@@ -10,6 +10,9 @@ INSTALL = install
 prefix=""
 bindir = $(prefix)/usr/bin
 
+simple:
+	gcc -o forth forth.c -lreadline -lm
+
 all: dyncall boehmgc forth
 
 clean:
