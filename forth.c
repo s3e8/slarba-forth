@@ -405,23 +405,23 @@ static void interpret(void **ip, cell *ds, void ***rs, reader_state_t *inputstat
     while(b->name) create_builtin(b++);
 
     /* some constants */
-    create_constant("version", FORTH_VERSION);
-    create_constant("f_builtin", FLAG_BUILTIN);
-    create_constant("f_hasarg", FLAG_HASARG);
-    create_constant("f_immediate", FLAG_IMMED);
-    create_constant("f_hidden", FLAG_HIDDEN);
-    create_constant("f_inline", FLAG_INLINE);
-    create_constant("f_deferred", FLAG_DEFERRED);
+    create_constant("version",      FORTH_VERSION);
+    create_constant("f_builtin",    FLAG_BUILTIN);
+    create_constant("f_hasarg",     FLAG_HASARG);
+    create_constant("f_immediate",  FLAG_IMMED);
+    create_constant("f_hidden",     FLAG_HIDDEN);
+    create_constant("f_inline",     FLAG_INLINE);
+    create_constant("f_deferred",   FLAG_DEFERRED);
     create_constant("s0", (cell) &s0);
     create_constant("r0", (cell) &r0);
     create_constant("t0", (cell) &t0);
     create_constant("f0", (cell) &f0);
-    create_constant("state", (cell) &state);
-    create_constant("cellsize", (cell)sizeof(cell));
-    create_constant("floatsize", (cell)sizeof(float));
-    create_constant("base", (cell) &base);
-    create_constant("here", (cell) &here);
-    create_constant("here0", (cell)here0);
+    create_constant("cellsize",   (cell)sizeof(cell));
+    create_constant("floatsize",  (cell)sizeof(float));
+    create_constant("state",  (cell) &state);
+    create_constant("base",   (cell) &base);
+    create_constant("here",   (cell) &here);
+    create_constant("here0",  (cell)  here0);
     create_constant("hdrsize", (cell) sizeof(word_header_t));
     create_constant("<stdin>", (cell) &stdin_state);
     create_constant("<stdout>", (cell) stdout);
