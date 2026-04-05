@@ -227,45 +227,47 @@ static char *read_next_line(reader_state_t *state)
 
 static char* prompt_line(const char* prompt, reader_state_t* state)
 {
-  return NULL;
+    return NULL;
 }
 
 static int read_key(reader_state_t *state) {
-  if(*state->remaining_chars=='\0') {
-    if(!read_next_line(state)) return -1;
-  }
-  return *state->remaining_chars++;
+    if(*state->remaining_chars=='\0') {
+        if(!read_next_line(state)) return -1;
+    }
+    return *state->remaining_chars++;
 }
 
 static char *read_word(reader_state_t *state, char *tobuf)
 {
-  char *buf = tobuf;
+    char *buf = tobuf;
 
-  // skip whitespaces first
- skipws:
-  skip_whitespaces(state);
+    // skip whitespaces first
+   skipws:
+    skip_whitespaces(state);
 
-  // buffer exhausted? fill and reskip whitespaces
-  if(*state->remaining_chars == '\0') {
-    if(!read_next_line(state)) return NULL;
-    goto skipws;
-  }
+    // buffer exhausted? fill and reskip whitespaces
+    if(*state->remaining_chars == '\0') {
+      if(!read_next_line(state)) return NULL;
+      goto skipws;
+    }
 
-  // copy until next whitespace
-  while(*state->remaining_chars!='\0' && !isspace(*state->remaining_chars)) {
-    *buf++ = *state->remaining_chars++;
-  }
-  state->remaining_chars++;
-  *buf = '\0';
+    // copy until next whitespace
+    while(*state->remaining_chars!='\0' && !isspace(*state->remaining_chars)) {
+      *buf++ = *state->remaining_chars++;
+    }
+    state->remaining_chars++;
+    *buf = '\0';
 
-  return tobuf;
+    return tobuf;
 }
 
-static void emit_char(int c, FILE *fp) {
-  fputc(c, fp);
+static void emit_char(int c, FILE *fp)
+{
+    fputc(c, fp);
 }
 
-static void *get_builtin(const char *name) {
+static void *get_builtin(const char *name)
+{
   word_header_t *hdr = find_word(name);
   return *(cfa(hdr));
 }
