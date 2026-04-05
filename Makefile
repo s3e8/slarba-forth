@@ -11,7 +11,7 @@ prefix=""
 bindir = $(prefix)/usr/bin
 
 simple:
-	gcc -o forth forth.c -lreadline -lm
+	gcc -o forth forth.c -lm
 
 all: dyncall boehmgc forth
 
