@@ -260,6 +260,7 @@ static void *get_builtin(const char *name) {
   return *(cfa(hdr));
 }
 
+// defword
 static void assemble_word(const char *name, cell flags, void **code, cell codesize) {
   int i;
   create_word(name, flags);
@@ -269,24 +270,70 @@ static void assemble_word(const char *name, cell flags, void **code, cell codesi
   comma((cell)get_builtin("eow"));
 }
 
+// defconst
 static void create_constant(const char *name, cell value) {
   void *flagdef[] = { get_builtin("lit"), 0, get_builtin("exit") };
   flagdef[1] = (void*)value;
   assemble_word(name, FLAG_INLINE, flagdef, sizeof(flagdef));
 }
 
+// deffconst
 typedef float aliasingfloat __attribute__((__may_alias__));
-
 static void create_fconstant(const char *name, float value) {
   void *flagdef[] = { get_builtin("flit"), 0, get_builtin("exit") };
   *(aliasingfloat*)(&flagdef[1]) = value;
   assemble_word(name, FLAG_INLINE, flagdef, sizeof(flagdef));
 }
 
+// defcode
 static void create_builtin(builtin_word_t *b) {
   create_word(b->name, b->flags | FLAG_BUILTIN);
   comma((cell)b->code);
 }
+
+
+/// NEW DEFINING WORDS!!!!
+// get_builtin
+static void* getcode(const char* name)
+{
+  word_header_t* word = find_word(name);
+  return *(cfa(word));
+}
+
+// create_builtin
+static void defcode(const char* name, void* code, cell flags)
+{
+  create_word(name, flags | FLAG_BUILTIN);
+  comma((cell)code);
+}
+
+// assemble_word
+static void defword(const char* name, void* code[], int wordcount, cell flags)
+{
+  create_word(name, flags); // todo: /sizeof(void*)?
+  for(int i = 0; i < wordcount; i++) comma((cell)code[i]);
+  comma((cell)get_builtin("eow"));
+}
+
+// create_constant
+static void defconst(const char* name, cell value)
+{
+  void* flagdef[] = { getcode("lit"), (void*)value, getcode("exit") };
+  defword(name, flagdef, 3, FLAG_INLINE);
+}
+
+// create_fconstant
+// typedef float aliasingfloat __attribute__((__may_alias__));
+static void deffconst(const char* name, cell value)
+{
+  // *(aliasingfloat*)(&flagdef[1]) = value; // todo: ??
+  void* flagdef[] = { getcode("flit"), (aliasingfloat*)value, getcode("exit") };
+  defword(name, flagdef, 3, FLAG_INLINE);
+}
+
+/// END NEW DEFINING WORDS
+
+
 
 static thread_state_t *init_thread(cell *s0, void ***r0, cell *t0, void **entrypoint)
 {
