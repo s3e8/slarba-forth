@@ -62,14 +62,14 @@ typedef long cell;
 /* preprocessor trick to test sizeof(long)==sizeof(void*)? */
 
 /* dictionary definition header. NEVER change the order of these fields, it's crucial! */
-typedef struct word_header_t 
+typedef struct word_header_t
 {
   cell                  flags;
   struct word_header_t* next;
   char                  name[MAX_WORD_NAME_LEN];
 } word_header_t;
 
-typedef struct thread_state_t 
+typedef struct thread_state_t
 {
   cell                    killed;
   struct thread_state_t*  next;
@@ -84,9 +84,9 @@ typedef struct thread_state_t
   float*  f0;
 } thread_state_t;
 
-// todo: 
+// todo:
 /* utility structure for creating builtins */
-typedef struct builtin_word_t 
+typedef struct builtin_word_t
 {
   char *name;
   void *code;
@@ -101,14 +101,14 @@ static word_header_t*   latest          = NULL;
 static thread_state_t*  current_thread  = NULL;
 
 /* utility functions */
-static word_header_t *find_word(const char *name) 
+static word_header_t *find_word(const char *name)
 {
   if(!name) return NULL;
 
   word_header_t* hdr = latest;
   while(hdr)
   {
-    if(!(hdr->flags & FLAG_HIDDEN) && !strncmp(hdr->name, name, MAX_WORD_NAME_LEN)) 
+    if(!(hdr->flags & FLAG_HIDDEN) && !strncmp(hdr->name, name, MAX_WORD_NAME_LEN))
       return hdr;
 
     hdr = hdr->next;
@@ -116,19 +116,19 @@ static word_header_t *find_word(const char *name)
   return NULL;
 }
 
-static void **cfa(word_header_t* word) 
+static void **cfa(word_header_t* word)
 {
   return (void**)(word+1);
 }
 
-static void comma(cell value) 
+static void comma(cell value)
 {
   *(cell*)here = value;
   here += sizeof(cell);
 }
 
 static word_header_t* create_word(const char *name, cell flags) {
-  if(!name) 
+  if(!name)
   {
     name="\0";  /* for creating unnamed words */
   }
@@ -142,7 +142,7 @@ static word_header_t* create_word(const char *name, cell flags) {
   return new;
 }
 
-typedef struct reader_state_t 
+typedef struct reader_state_t
 {
   FILE* stream;
   cell  linebuf_size;
@@ -150,7 +150,7 @@ typedef struct reader_state_t
   char* remaining_chars;
 } reader_state_t;
 
-static void init_reader_state(reader_state_t* state, char* linebuf, cell linebuf_size, FILE* fp) 
+static void init_reader_state(reader_state_t* state, char* linebuf, cell linebuf_size, FILE* fp)
 {
   state->stream           = fp;
   state->linebuf          = linebuf;
@@ -204,16 +204,21 @@ static char *read_next_line(reader_state_t *state) {
   return tmp;
 }
 
-static char *prompt_line(const char *prompt, reader_state_t *state) {
-  char *tmp = readline(prompt);
-  if(!tmp) {
-    return NULL;
-  }
-  add_history(tmp);
-  strncpy(state->linebuf, tmp, state->linebuf_size);
-  free(tmp);
-  state->remaining_chars = state->linebuf;
-  return state->remaining_chars;
+// static char *prompt_line(const char *prompt, reader_state_t *state) {
+//   char *tmp = readline(prompt);
+
+//   if(!tmp) return NULL;
+
+//   add_history(tmp);
+//   strncpy(state->linebuf, tmp, state->linebuf_size);
+//   free(tmp);
+//   state->remaining_chars = state->linebuf;
+//   return state->remaining_chars;
+// }
+
+static char* prompt_line(const char* prompt, reader_state_t* state)
+{
+  return NULL;
 }
 
 static int read_key(reader_state_t *state) {
@@ -378,10 +383,10 @@ static void interpret(void **ip, cell *ds, void ***rs, reader_state_t *inputstat
   reader_state_t stdin_state;
 
   // DCCallVM* callvm = dcNewCallVM((DCsize)4096);
-  
+
   /* trick: include bytecodes.h with a macro for BYTECODE that produces builtin
    * list elements */
-  static builtin_word_t builtins[] = 
+  static builtin_word_t builtins[] =
   {
     #define BYTECODE(label, name, nargs, nfargs, flags, code) { name, &&l_##label, flags },
     #include "bytecodes.h"
@@ -398,7 +403,7 @@ static void interpret(void **ip, cell *ds, void ***rs, reader_state_t *inputstat
 
     builtin_word_t *b = builtins;
     while(b->name) create_builtin(b++);
-    
+
     /* some constants */
     create_constant("version", FORTH_VERSION);
     create_constant("f_builtin", FLAG_BUILTIN);
@@ -460,7 +465,7 @@ static void interpret(void **ip, cell *ds, void ***rs, reader_state_t *inputstat
 
     // QUIT is the topmost interpreter loop: interpret forever. better version implemented in
     // forth later that supports eof etc
-    void *quitcode[] = { WORD(INTERPRET), 
+    void *quitcode[] = { WORD(INTERPRET),
 			 WORD(BRANCH), OFFSET(-2),
 			 WORD(EOW)
     };
