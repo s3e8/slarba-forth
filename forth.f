@@ -6,7 +6,7 @@ word create
 latest @ hidden
 ]
 exit
-eow 
+eow
 [
 
 59 here @ c!
@@ -82,7 +82,7 @@ fsp!
 
 : if immediate
     ' 0branch ,
-    here @ 
+    here @
     0 ,
 ;
 
@@ -572,7 +572,7 @@ variable firstbuiltin
     latest @
     begin
 	dup ?builtin not
-    while	    
+    while
 	    cell+ @
     repeat
     firstbuiltin !
@@ -693,7 +693,7 @@ find-first-builtin
 	    exit
 	then
 	drop
-    then    
+    then
     create
 ;
 
@@ -809,7 +809,7 @@ hide copytohere
 : :noname
     0 create
     here @
-    ] 
+    ]
 ;
 
 : ['] immediate
@@ -968,7 +968,7 @@ defer breakpoint
 	drop
 	case
 	    -1 of ." aborted" cr endof
-	    
+
 	    ." uncaught throw " dup . cr
 	endcase
 	breakpoint
@@ -1001,7 +1001,7 @@ defer breakpoint
 
 		dup
 		lookup-word-from-ip
-		
+
 		id. cr
 	    endcase
 	    cell+
@@ -1025,10 +1025,14 @@ defer breakpoint
 \     prompt-display-data s" [ds:%d ts:%d fs:%d %s] DEBUG> " format
 \ ;
 
-s" disasm.f" include
-s" debugger.f" include
-s" classes.f" include
-s" unittest.f" include
+\ includes
+s" disasm.f"        include
+s" debugger.f"      include
+s" classes.f"       include
+s" unittest.f"      include
+
+s" expert-system.f" include
+
 
 : bytes-used
       here @ here0 - ;
@@ -1038,9 +1042,9 @@ s" unittest.f" include
 
 : data-bytes-used
       datahere @ datahere0 - ;
-  
+
 : welcome
-    ." -^*^- MLT Forth version " version . ." -^*^-" cr 
+    ." -^*^- MLT Forth version " version . ." -^*^-" cr
     ."   Const space used: " const-bytes-used . cr
     ."    Data space used: " data-bytes-used . cr
     ."         Space used: " bytes-used . cr
