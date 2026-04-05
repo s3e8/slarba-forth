@@ -617,7 +617,6 @@ find-first-builtin
 
 : interpret
     iword
-    dup tell \ for dbg, print word
     dup 0= if
 	drop exit
     then
