@@ -64,33 +64,33 @@ typedef long cell;
 /* dictionary definition header. NEVER change the order of these fields, it's crucial! */
 typedef struct word_header_t
 {
-  cell                  flags;
-  struct word_header_t* next;
-  char                  name[MAX_WORD_NAME_LEN];
+    cell                  flags;
+    struct word_header_t* next;
+    char                  name[MAX_WORD_NAME_LEN];
 } word_header_t;
 
 typedef struct thread_state_t
 {
-  cell                    killed;
-  struct thread_state_t*  next;
-  void**  ip;
-  cell*   ds;
-  void*** rs;
-  cell*   ts;
-  float*  fs;
-  cell*   t0;
-  cell*   s0;
-  void*** r0;
-  float*  f0;
+    cell                    killed;
+    struct thread_state_t*  next;
+    void**  ip;
+    cell*   ds;
+    void*** rs;
+    cell*   ts;
+    float*  fs;
+    cell*   t0;
+    cell*   s0;
+    void*** r0;
+    float*  f0;
 } thread_state_t;
 
 // todo:
 /* utility structure for creating builtins */
 typedef struct builtin_word_t
 {
-  char *name;
-  void *code;
-  cell flags;
+    char *name;
+    void *code;
+    cell flags;
 } builtin_word_t;
 
 /* free memory pointers and latest defined word */
@@ -116,9 +116,9 @@ static word_header_t *find_word(const char *name)
   return NULL;
 }
 
-static void **cfa(word_header_t* word)
+static void** cfa(word_header_t* word)
 {
-  return (void**)(word+1);
+  return (void**)(word + 1);
 }
 
 static void comma(cell value)
@@ -127,18 +127,18 @@ static void comma(cell value)
   here += sizeof(cell);
 }
 
-static word_header_t* create_word(const char *name, cell flags) {
-  if(!name)
-  {
-    name="\0";  /* for creating unnamed words */
-  }
+static word_header_t* create_word(const char *name, cell flags)
+{
+  if(!name) name="\0";  /* for creating unnamed words */
 
   word_header_t* new = (word_header_t*)here;
   here += sizeof(word_header_t);
   strncpy(new->name, name, MAX_WORD_NAME_LEN);
-  new->flags = flags;
-  new->next = latest;
-  latest = new;
+
+  new->flags  = flags;
+  new->next   = latest;
+  latest      = new;
+
   return new;
 }
 
@@ -159,9 +159,11 @@ static void init_reader_state(reader_state_t* state, char* linebuf, cell linebuf
   state->remaining_chars  = linebuf;
 }
 
-static reader_state_t* open_file(const char *filename, const char *mode) {
+static reader_state_t* open_file(const char *filename, const char *mode)
+{
   FILE *fp = fopen(filename, mode);
   if(!fp) return NULL;
+
   char* lbuf = MALLOC_ATOMIC(1024);
   if(!lbuf) goto err_exit;
 
@@ -169,6 +171,7 @@ static reader_state_t* open_file(const char *filename, const char *mode) {
 
   reader_state_t *state = (reader_state_t*)MALLOC(sizeof(reader_state_t));
   if(!state) goto err_exit;
+
   init_reader_state(state, lbuf, 1024, fp);
   return state;
 
@@ -178,26 +181,32 @@ static reader_state_t* open_file(const char *filename, const char *mode) {
     return NULL;
 }
 
-static void close_file(reader_state_t *fp) {
+static void close_file(reader_state_t *fp)
+{
   if(fp->stream) fclose(fp->stream);
+
   FREE(fp->linebuf);
   FREE(fp);
 }
 
-static void skip_whitespaces(reader_state_t *state) {
+static void skip_whitespaces(reader_state_t *state)
+{
   while(isspace(*state->remaining_chars)) state->remaining_chars++;
 }
 
-static cell is_eol(reader_state_t *state) {
+static cell is_eol(reader_state_t *state)
+{
   skip_whitespaces(state);
   return *state->remaining_chars=='\0';
 }
 
-static cell is_eof(reader_state_t *fp) {
+static cell is_eof(reader_state_t *fp)
+{
   return *fp->remaining_chars=='\0' && feof(fp->stream);
 }
 
-static char *read_next_line(reader_state_t *state) {
+static char *read_next_line(reader_state_t *state)
+{
   char *tmp = fgets(state->linebuf, state->linebuf_size, state->stream);
   if(!tmp) return NULL;
   state->remaining_chars = tmp;
@@ -228,7 +237,8 @@ static int read_key(reader_state_t *state) {
   return *state->remaining_chars++;
 }
 
-static char *read_word(reader_state_t *state, char *tobuf) {
+static char *read_word(reader_state_t *state, char *tobuf)
+{
   char *buf = tobuf;
 
   // skip whitespaces first
