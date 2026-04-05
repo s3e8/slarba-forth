@@ -19,8 +19,8 @@
 
 // #include <dyncall.h>
 // #include <dynload.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+// #include <readline/readline.h>
+// #include <readline/history.h>
 
 #ifdef USE_GC
  #include <gc.h>
@@ -568,16 +568,16 @@ static char *word_completion_generator(const char *text, int state)
   return NULL;
 }
 
-static char **word_completion(const char *text, int start, int end)
-{
-  return rl_completion_matches(text, &word_completion_generator);
-}
+// static char **word_completion(const char *text, int start, int end)
+// {
+//   return rl_completion_matches(text, &word_completion_generator);
+// }
 
-static void init_readline()
-{
-  rl_readline_name = "sforth";
-  rl_attempted_completion_function = &word_completion;
-}
+// static void init_readline()
+// {
+//   rl_readline_name = "sforth";
+//   rl_attempted_completion_function = &word_completion;
+// }
 
 int main(int argc, char **argv) {
   cell   datastack[1024];
@@ -587,7 +587,7 @@ int main(int argc, char **argv) {
     GC_INIT();
   #endif
 
-  init_readline();
+  // init_readline();
 
   reader_state_t *fp = open_file("forth.f", "r");
   if(!fp) {
