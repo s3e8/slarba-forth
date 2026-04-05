@@ -529,6 +529,7 @@ variable latest-defined-vocab
 : ' immediate  ( better version of tick )
     word find
     dup 0= if
+    ." tick: "
 	." no such word" cr drop
 	exit
     then
@@ -657,6 +658,7 @@ find-first-builtin
 		    f,
 		then
 	    else
+	    ." interpret: "
 		." no such word" cr
 	    then
 	then
@@ -677,6 +679,7 @@ find-first-builtin
     ?dup if
 	>cfa cell+ !
     else
+    ." is: "
 	." no such word" cr
     then
 ;
