@@ -9,13 +9,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/syscall.h>
+// #include <sys/syscall.h>
 #include <ctype.h>
 #include <string.h>
 #include <limits.h>
 #include <math.h>
 #include <float.h>
-#include <sys/mman.h>
+// #include <sys/mman.h>
 
 // #include <dyncall.h>
 // #include <dynload.h>
@@ -57,7 +57,7 @@
 #define STATE_COMPILE   1
 
 /* the most important type, the cell. MUST be exactly of the pointer length! */
-typedef long cell;
+typedef intptr_t cell; // todo: or uintptr?
 
 /* preprocessor trick to test sizeof(long)==sizeof(void*)? */
 
